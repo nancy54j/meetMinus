@@ -73,46 +73,38 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
-
-        //passes user "me" to it
         Intent i = getIntent();
         me = (User) i.getSerializableExtra("MeUser");
-
-        //set address of "me" user
         me.setMeshID(mm.getUuid());
+
         friends = me.getFriends();
     }
 
-    /*function that constantly updates longitude and latitude_____________
-    *modifies lat/lon of a user through setLatitude and set longitude
-
-
+    //function that constantly updates longitude and latitude_____________
 
     /**function that loops through your contacts and checks your friends locations
      *if within a certain proximity to you, send alert
-    **/
+     **/
     public void findNearbyFriends(){
 
         for (Map.Entry<User, String> entry : friends.entrySet())
         {
-           User user = entry.getKey();
-           double lat = user.getLatitude();
-           double lon = user.getLongitude();
+            User user = entry.getKey();
+            double lat = user.getLatitude();
+            double lon = user.getLongitude();
 
-           double dist = haversine(me.getLatitude(), me.getLongitude(), lat, lon);
+            double dist = haversine(me.getLatitude(), me.getLongitude(), lat, lon);
 
-           if (dist < proximity){
-               //send notification and open dialog
-           }
+            if (dist < proximity){
+                //send notification
+            }
 
         }
 
     }
 
 
-    //calculates distance between 2 coordinates
     public static double haversine(
             double lat1, double lng1, double lat2, double lng2) {
         int r = 6371; // average radius of the earth in km
@@ -139,7 +131,19 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         }
     }
 
-
+    /**
+     * Called when the app is being closed (not just navigated away from). Shuts down
+     * the {@link AndroidMeshManager} instance.
+     */
+    @Override
+    protected void onDestroy() {
+        try {
+            super.onDestroy();
+            mm.stop();
+        } catch (MeshService.ServiceDisconnectedException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /**
@@ -252,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User friend = findUser(dataSnapshot, userID);
-                        //if response is yes
                         me.addFriend(friend, Category);
                     }
 
@@ -261,6 +264,10 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
 
                     }
                 });
+
+
+
+
 
 
                 //make a dialog_____________
@@ -274,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
     }
 
     public User findUser(DataSnapshot dataSnapshot, String userID){
-       return dataSnapshot.child(userID).getValue(User.class);
+        return dataSnapshot.child(userID).getValue(User.class);
     }
 
     public Dialog onCreateDialog(String userID) {
@@ -352,18 +359,4 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         }
     }
 
-
-    /**
-     * Called when the app is being closed (not just navigated away from). Shuts down
-     * the {@link AndroidMeshManager} instance.
-     */
-    @Override
-    protected void onDestroy() {
-        try {
-            super.onDestroy();
-            mm.stop();
-        } catch (MeshService.ServiceDisconnectedException e) {
-            e.printStackTrace();
-        }
-    }
 }

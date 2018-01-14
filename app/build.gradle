@@ -74,7 +74,7 @@ repositories {
 dependencies {
     compile('io.left.rightmesh:rightmesh-library-dev:0.4.0')
     compile 'com.android.support:multidex:1.0.2'
-    implementation 'com.google.firebase:firebase-database:11.0.4'
+    compile 'com.google.firebase:firebase-core:11.0.4'
 }
 
 android {
@@ -97,6 +97,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:11.0.4'
 }
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:+'
+    implementation 'com.google.firebase:firebase-database:11.0.4'
 }
 

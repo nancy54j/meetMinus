@@ -1,10 +1,10 @@
 package com.example.nancy.meetminus;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import io.left.rightmesh.mesh.MeshManager;
-import io.left.rightmesh.util.RightMeshException;
-
-import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 
 public class SignUp extends AppCompatActivity {
     /**
