@@ -20,7 +20,6 @@ public class User {
     public final String userID;
     private Map<User, String> friends = new HashMap<>();
 
-
     private MeshID meshID;
     private double Longitude;
     private double Latitude;
@@ -36,6 +35,10 @@ public class User {
 
     }
 
+    public Map<User, String> getFriends(){
+        return friends;
+    }
+
     public void setMeshID(MeshID id){
         this.meshID = id;
     }
@@ -47,16 +50,28 @@ public class User {
 
     public void setLongitude(double longitude){
         this.Longitude = longitude;
+
     }
 
     public void setLatitude(double latitude){
         this.Latitude = latitude;
     }
 
-    public void addFriend(String userID, String Category){
+    public double getLongitude(){
+        return this.Longitude;
+    }
 
+    public double getLatitude(){
+        return this.Latitude;
+    }
+
+    public void addFriend(User user, String Category){
 
         //get the user from firebase
         this.friends.put(user, Category);
     }
+
+
+
+
 }

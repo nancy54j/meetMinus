@@ -2,6 +2,7 @@ package com.example.nancy.meetminus;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -18,9 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nancy.meetminus.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,15 +44,21 @@ import static android.app.PendingIntent.getActivity;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import static java.lang.Math.sqrt;
 
 public class MainActivity extends AppCompatActivity implements MeshStateListener{
+
+    //set proximity
 
     // Port to bind app to.
     private static final int HELLO_PORT = 1000;
 
+    private DatabaseReference myRef;
+
     // MeshManager instance - interface to the mesh network.
     AndroidMeshManager mm = null;
-    User me;
+    private User me;
+    private Map<User, String> friends;
     // Set to keep track of peers connected to the mesh.
     Set<User> users = new HashSet<>();
 
@@ -63,13 +76,29 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         Intent i = getIntent();
         me = (User) i.getSerializableExtra("MeUser");
         me.setMeshID(mm.getUuid());
+
+        friends = me.getFriends();
     }
 
     //function that constantly updates longitude and latitude_____________
 
     /**function that loops through your contacts and checks your friends locations
      *if within a certain proximity to you, send alert
-    **/_________________________________________
+    **/
+    public void findNearbyFriends(){
+
+        for (Map.Entry<User, String> entry : friends.entrySet())
+        {
+           User user = entry.getKey();
+           double lat = user.getLatitude();
+           double lon = user.getLongitude();
+
+           double dist = sqrt((me.getLatitude() - lat)*(me.getLatitude() - lat)+ (me.getLongitude()-lon)*(me.getLongitude()-lon));
+
+            System.out.println(entry.getKey() + "/" + entry.getValue());
+        }
+
+    }
 
 
     /**
@@ -201,10 +230,28 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // Toast data contents.
-                String userID = new String(event.data);
+                final String userID = new String(event.data);
+                final String Category = "friend";
 
-                me.addFriend(userID);
+                myRef = FirebaseDatabase.getInstance().getReference();
+
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User friend = findUser(dataSnapshot, userID);
+                        me.addFriend(friend, Category);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
 
                 //make a dialog_____________
 
@@ -216,6 +263,9 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         });
     }
 
+    public User findUser(DataSnapshot dataSnapshot, String userID){
+       return dataSnapshot.child(userID).getValue(User.class);
+    }
 
     public Dialog onCreateDialog(String userID) {
         // Use the Builder class for convenient dialog construction
