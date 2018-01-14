@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.nancy.meetminus"
-        minSdkVersion 15
+        minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -20,10 +20,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:26.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    compile 'com.android.support:design:26.0.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 
@@ -31,7 +32,8 @@ buildscript {
     ext {
         artifactory_app_username = "nancy"
         artifactory_app_password = "cdbb0c608126e7cdbc74776e4b02c450"
-        artifactory_app_key = "0xf22e487a9a1ead00d8a440746d32e0eae4630e2b" //you need to be approved to obtain a key
+        artifactory_app_key = "0xf22e487a9a1ead00d8a440746d32e0eae4630e2b"
+        //you need to be approved to obtain a key
     }
     repositories {
         maven {
@@ -70,8 +72,9 @@ repositories {
 }
 
 dependencies {
-    compile ('io.left.rightmesh:rightmesh-library-dev:0.4.0')
+    compile('io.left.rightmesh:rightmesh-library-dev:0.4.0')
     compile 'com.android.support:multidex:1.0.2'
+    implementation 'com.google.firebase:firebase-database:11.0.4'
 }
 
 android {
@@ -88,3 +91,12 @@ android {
         }
     }
 }
+
+apply plugin: 'com.google.gms.google-services'
+dependencies {
+    implementation 'com.google.firebase:firebase-auth:11.0.4'
+}
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:+'
+}
+

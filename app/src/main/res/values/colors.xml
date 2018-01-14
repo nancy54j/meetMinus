@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="secondaryText">#8a8a8a</color>
+    <color name="borderColor">#8a8a8a</color>
+
+
+    <color name="buttonTextColor">#ffffff</color>
+    <color name="buttonBG1">#5a595b</color>
+    <color name="BGSignUp">#353535</color>
 </resources>
