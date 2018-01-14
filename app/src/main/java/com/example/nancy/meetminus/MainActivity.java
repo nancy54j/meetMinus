@@ -352,6 +352,11 @@ public class MainActivity extends AppCompatActivity implements MeshStateListener
         }
     }
 
+    public void renewUserLatitude(User user) {
+        user.setLongitude(MapsActivityCurrentPlace.getLongitude());
+        user.setLatitude(MapsActivityCurrentPlace.getLatitude());
+    }
+
 
     /**
      * Called when the app is being closed (not just navigated away from). Shuts down
